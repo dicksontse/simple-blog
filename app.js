@@ -8,6 +8,7 @@ var routes = require('./routes');
 var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
+var ArticleProvider = require('./articleprovider-memory').ArticleProvider;
 
 var app = express();
 
@@ -28,8 +29,12 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+var articleProvider = new ArticleProvider();
+
 app.get('/', function(req, res) {
-  res.send('Hello World');
+  articleProvider.findAll(function(error, docs) {
+    res.send(docs);
+  });
 });
 app.get('/users', user.list);
 
